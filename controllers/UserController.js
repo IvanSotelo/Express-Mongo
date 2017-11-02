@@ -3,6 +3,16 @@ var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/User');
 
 /**
+ * Display a listing of the resource.
+ *
+ * @return Response
+ */
+
+function index(request, response) {
+  response.status(200).send({message: 'Hola'});
+}
+
+/**
  * Store a newly created resource in storage.
  *
  * @return Response
@@ -46,6 +56,32 @@ function store(request, response) {
   }
 }
 
+/**
+ * Update the specified resource in storage.
+ *
+ * @param  int  $id
+ * @return Response
+ */
+function update(request,response)
+{
+  var id = request.params.id;
+
+  User.findByIdAndUpdate(id, request.body , {new:true}, (err,user) => {
+    if (err) {
+      response.status(500).send({message: 'Error actualizar usuario'});
+    }else {
+      if (!user) {
+        response.status(404).send({message: 'No existe el usuario'});
+      }else {
+        response.status(200).send({user: user});
+      }
+    }
+  });
+
+}
+
 module.exports = {
-  store
+  index,
+  store,
+  update
 };
