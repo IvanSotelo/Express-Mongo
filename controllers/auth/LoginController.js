@@ -1,4 +1,5 @@
 'use strict'
+var jwt = require('../../services/jwt');
 var bcrypt = require('bcrypt-nodejs');
 var User = require('../../models/User');
 
@@ -23,7 +24,9 @@ function login(request,response) {
       if (user) {
         bcrypt.compare(password, user.password, (err,check) => {
           if (check) {
-            response.status(200).send({user});
+            response.status(200).send({
+              token: jwt.createToken(user)
+            });
           }else {
             response.status(401).send({message: 'Usuario no autorizado'});
           }
